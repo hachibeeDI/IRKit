@@ -2,10 +2,6 @@
 from __future__ import (print_function, division, absolute_import, unicode_literals, )
 
 '''
-==========================
-API
-==========================
-
 '''
 
 from logging import getLogger, StreamHandler, DEBUG
@@ -15,6 +11,7 @@ handler.setLevel(DEBUG)
 logger.setLevel(DEBUG)
 logger.addHandler(handler)
 
+import json
 
 from .base import Resources, InfraredLightEntity
 
@@ -37,9 +34,13 @@ class Messages(Resources):
     uri = '/messages'
 
     def get(self, parameters):
-        return InfraredLightEntity(
-            responsed_json=self.client.get(Messages.uri, parameters)
-        )
+        r = self.client.get(Messages.uri, parameters)
+        if r.status_code == 200:
+            return InfraredLightEntity(
+                responsed_json=json.loads(r.text)
+            )
+        else:
+            raise ValueError(repr(r))
 
     def post(self, parameters):
         assert isinstance(parameters, InfraredLightEntity)

@@ -30,13 +30,12 @@ from requests import (
 @add_metaclass(ABCMeta)
 class BaseAPI(object):
 
-    def __init__(self):
-        from resolve import resolve_irkit_addresses
-        self.base_uri = resolve_irkit_addresses()
+    def __init__(self, host):
+        self.base_uri = 'http://' + host
 
     def get(self, resource_uri, parameters=None):
         params = parameters or {}
-        return get(path.join(self.base_uri, resource_uri), params=params)
+        return get(self.base_uri + resource_uri, params=params)
 
     def post(self, resource_uri, parameters):
         return post(path.join(self.base_uri, resource_uri), params=parameters)
