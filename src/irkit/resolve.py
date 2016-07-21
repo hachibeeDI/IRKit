@@ -13,7 +13,7 @@ import select
 from socket import gethostbyname
 from collections import deque
 
-import pybonjour
+from . import pybonjour
 
 
 REGTYPE = '_irkit._tcp'
