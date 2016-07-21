@@ -10,10 +10,9 @@ handler.setLevel(DEBUG)
 logger.setLevel(DEBUG)
 logger.addHandler(handler)
 
-
+import json
 from os import path
 from abc import ABCMeta
-
 
 from .local import (
     Messages as LocalMessages,
@@ -35,10 +34,16 @@ class BaseAPI(object):
 
     def get(self, resource_uri, parameters=None):
         params = parameters or {}
+        logger.debug(path.join(self.base_uri, resource_uri) + ' params = ' + str(parameters))
         return get(self.base_uri + resource_uri, params=params)
 
     def post(self, resource_uri, parameters):
-        return post(path.join(self.base_uri, resource_uri), params=parameters)
+        logger.debug(path.join(self.base_uri, resource_uri) + ' params = ' + str(parameters))
+
+        r = post(path.join(self.base_uri, resource_uri), params=parameters)
+        if r.status_code == 200:
+            return json.loads(r.text)
+        raise ValueError(repr(r))
 
 
 class API(BaseAPI):

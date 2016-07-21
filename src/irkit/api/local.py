@@ -59,7 +59,7 @@ class Keys(Resources):
 
       return {"clienttoken":"XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"}
     '''
-    uri = '/keys'
+    uri = 'keys'
 
     def post(self):
         return self.client.post(Keys.uri, {})

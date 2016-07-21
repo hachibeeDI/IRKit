@@ -17,18 +17,24 @@ subparsers = CMD_PARSER.add_subparsers(help='sub-command help')
 
 
 def local_func(args):
-    # from irkit import LocalAPI
-    # base_uri = resolve_irkit_addresses()[0]
-    # api = LocalAPI(base_uri)
+    from irkit.api import LocalAPI
+    base_uri = resolve_irkit_addresses()[0]
+    if args.host:
+        print(base_uri)
+        return
     if args.keys:
-        # print(api.keys.post())
+        api = LocalAPI(base_uri)
+        print(api.keys.post())
         print('this is your key')
         return
-    if args.send:
+    elif args.send:
         print('send ' + args.send)
+    else:
+        print('need argument. see help')
 
 
 LOCAL_PARSER = subparsers.add_parser('local', help='api for locals.')
+LOCAL_PARSER.add_argument('--host', action='store_true', help='show irkit host')
 LOCAL_PARSER.add_argument('--keys', action='store_true', help='get a client token.')
 LOCAL_PARSER.add_argument('--send', help='send signals.')
 LOCAL_PARSER.set_defaults(func=local_func)
