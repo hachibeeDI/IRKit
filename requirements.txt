@@ -1,5 +1,2 @@
-masala==0.0.2
-pybonjour==1.1.1
 requests==2.3.0
 six==1.7.3
-wsgiref==0.1.2
