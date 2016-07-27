@@ -46,7 +46,13 @@ class Messages(Resources):
             raise ValueError(repr(r))
 
     def post(self, parameters):
-        if isinstance(parameters, InfraredLightEntity):
+        if isinstance(parameters, list):
+            parameters = {
+                'format': 'raw',
+                'freq': 38,
+                'data': parameters,
+            }
+        elif isinstance(parameters, InfraredLightEntity):
             parameters = parameters.as_dict()
         return self.client.post(Messages.uri, parameters)
 
