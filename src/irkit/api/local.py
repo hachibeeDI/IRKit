@@ -46,8 +46,9 @@ class Messages(Resources):
             raise ValueError(repr(r))
 
     def post(self, parameters):
-        assert isinstance(parameters, InfraredLightEntity)
-        return self.client.post(Messages.uri, parameters.as_dict())
+        if isinstance(parameters, InfraredLightEntity):
+            parameters = parameters.as_dict()
+        return self.client.post(Messages.uri, parameters)
 
 
 class Keys(Resources):
