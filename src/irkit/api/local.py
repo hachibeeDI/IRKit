@@ -31,13 +31,16 @@ class Messages(Resources):
 
       赤外線信号を送ります。
     '''
-    uri = '/messages'
+    uri = 'messages'
 
-    def get(self, parameters):
-        r = self.client.get(Messages.uri, parameters)
+    def get(self):
+        # () -> InfraredLightEntity
+        r = self.client.get(Messages.uri, {})
         if r.status_code == 200:
+            result = r.text.decode('utf-8')
+            logger.debug('retrieve result is:' + result)
             return InfraredLightEntity(
-                responsed_json=json.loads(r.text)
+                responsed_json=json.loads(result or '{}')
             )
         else:
             raise ValueError(repr(r))

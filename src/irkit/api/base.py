@@ -51,15 +51,21 @@ class InfraredLightEntity(object):
         IRKitデバイスはオン→オフ間の時間、オフ→オン間の時間を 2MHz のカウンタで数えます。
         dataには、カウンタで数えた数をオン・オフの回数分ならびます。
     '''
-    def __init__(self, responsed_json=None, format=None, freq=None, data=None, ):
-        if responsed_json:
-            self.format = responsed_json['format']
-            self.freq = responsed_json['freq']
-            self.data = responsed_json['data']
-        else:
+    def __init__(self, responsed_json=None, format=None, freq=None, data=None):
+        if responsed_json is None:
             self.format = format
             self.freq = freq
             self.data = data
+        else:
+            self.format = responsed_json.get('format', '')
+            self.freq = responsed_json.get('freq', '')
+            self.data = responsed_json.get('data', '')
 
     def as_dict(self):
         return self.__dict__
+
+    def __unicode__(self):
+        return self.__str__().decode('utf-8')
+
+    def __str__(self):
+        return str(self.as_dict())

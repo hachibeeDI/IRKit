@@ -34,13 +34,15 @@ class BaseAPI(object):
 
     def get(self, resource_uri, parameters=None):
         params = parameters or {}
-        logger.debug(path.join(self.base_uri, resource_uri) + ' params = ' + str(parameters))
-        return get(self.base_uri + resource_uri, params=params)
+        full_path = path.join(self.base_uri, resource_uri)
+        logger.debug(full_path + ' params = ' + str(parameters))
+        return get(full_path, params=params)
 
     def post(self, resource_uri, parameters):
-        logger.debug(path.join(self.base_uri, resource_uri) + ' params = ' + str(parameters))
+        full_path = path.join(self.base_uri, resource_uri)
+        logger.debug(full_path + ' params = ' + str(parameters))
 
-        r = post(path.join(self.base_uri, resource_uri), params=parameters)
+        r = post(full_path, params=parameters)
         if r.status_code == 200:
             return json.loads(r.text)
         raise ValueError(repr(r))
