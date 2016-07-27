@@ -40,11 +40,13 @@ class BaseAPI(object):
 
     def post(self, resource_uri, parameters):
         full_path = path.join(self.base_uri, resource_uri)
-        logger.debug(full_path + ' params = ' + str(parameters))
+        # IRKit need raw style params
+        raw_params = json.dumps(parameters)
+        logger.debug(full_path + ' params = ' + raw_params)
 
-        r = post(full_path, params=parameters)
+        r = post(full_path, raw_params)
         if r.status_code == 200:
-            return json.loads(r.text)
+            return json.loads(r.text or '{}')
         raise ValueError(repr(r))
 
 
