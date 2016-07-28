@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import (print_function, division, absolute_import, )
 
-from logging import getLogger, StreamHandler, DEBUG
+from logging import getLogger
 logger = getLogger(__name__)
-handler = StreamHandler()
-handler.setLevel(DEBUG)
-logger.setLevel(DEBUG)
-logger.addHandler(handler)
 
 
 import select

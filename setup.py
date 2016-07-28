@@ -4,7 +4,7 @@
 from setuptools import setup, find_packages
 
 install_requires = open('requirements.txt').read().split('\n')
-readme_content = open('README.rst').read()
+readme_content = open('README.md').read()
 
 from shutil import copyfile
 copyfile('./main.py', './bin/irkit')
