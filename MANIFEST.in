@@ -1,2 +1,3 @@
+include main.py
 include README.md
 include requirements.txt

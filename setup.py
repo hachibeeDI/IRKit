@@ -12,7 +12,7 @@ copyfile('./main.py', './bin/irkit')
 
 setup(
     name='irkit',
-    version='0.0.1',
+    version='0.0.3',
     description='Command line toolkit IRKIt HTTP api',
     long_description=readme_content,
     author='OGURA_Daiki',
