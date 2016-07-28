@@ -3,7 +3,7 @@ from __future__ import (print_function, division, absolute_import, unicode_liter
 
 from six import add_metaclass
 
-from logging import getLogger, StreamHandler, DEBUG
+from logging import getLogger
 logger = getLogger(__name__)
 
 from abc import ABCMeta
@@ -55,7 +55,14 @@ class InfraredLightEntity(object):
         else:
             self.format = responsed_json.get('format', '')
             self.freq = responsed_json.get('freq', '')
-            self.data = responsed_json.get('data', '')
+            self.data = responsed_json.get('data', [])
+
+        logger.debug(
+            'InfraredLight is created by format: "{self.format}" freq: "{self.freq}" data: "{self.data}"'.format(self=self)
+        )
+
+    def is_empty(self):
+        return len(self.data) == 0
 
     def as_dict(self):
         return self.__dict__
