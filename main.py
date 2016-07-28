@@ -20,10 +20,17 @@ def save_signal(name, signal):
     if not path.exists(dir_to_save):
         makedirs(dir_to_save)
 
-    with open(path.join(dir_to_save, 'signal.json'), 'w+') as f:
-        config = json.loads(f.read() or '{}')
+    store_file = path.join(dir_to_save, 'signal.json')
+    # initialize if no store
+    if not path.exists(dir_to_save):
+        with open(store_file, 'w') as f:
+            f.write('{}')
+
+    with open(store_file, 'r+') as f:
+        config = json.loads(f.read())
         config[name] = signal
 
+        f.seek(0)
         f.write(json.dumps(config))
 
 
