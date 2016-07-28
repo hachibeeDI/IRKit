@@ -108,8 +108,7 @@ def local_func(args):
         if args.save:
             save_signal(args.save, result.as_dict())
             print('save signal as {} in ~/.config/irkit-py/signal.json'.format(args.save))
-        print('')
-        print('retrieve: ' + str(result))
+        print(str(result))
         return
 
     else:
