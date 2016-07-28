@@ -27,6 +27,17 @@ def save_signal(name, signal):
         f.write(json.dumps(config))
 
 
+def get_signal(name):
+    # type: (str) -> dict
+    """
+    :exception: IOError, KeyError
+    """
+    from os import environ, path
+
+    with open(path.join(environ['HOME'], '.config', 'irkit-py', 'signal.json'), 'r') as f:
+        return json.loads(f.read())[name]
+
+
 desc = """
 IRKit CLI Client for Python. v{0} See also http://getirkit.com/#IRKit-Device-API
 """.format(VERSION)
@@ -55,12 +66,24 @@ def local_func(args):
         print(api.keys.post())
         print('this is your key')
         return
+
     elif args.send:
-        raw_data = json.loads(args.send)
-        result = api.messages.post(raw_data)
+        # FIXME: I hate this style
+        value_to_send = None
+        try:
+            # TODO: check parsable before load
+            value_to_send = json.loads(args.send)
+        except ValueError:
+            # if argument is just string this command assume that is key name of data store
+            try:
+                value_to_send = get_signal(args.send)
+            except (IOError, KeyError):
+                return print('invalid name "{}" is passed. string should be key of signal.json'.format(args.send))
+
+        result = api.messages.post(value_to_send)
         print('')
-        print('send signal: ' + unicode(result))
-        return
+        return print('signal was sent')
+
     elif args.retrieve:
         result = api.messages.get()
         if result.is_empty():
@@ -72,6 +95,7 @@ def local_func(args):
         print('')
         print('retrieve: ' + str(result))
         return
+
     else:
         print('need argument. see help')
         return
@@ -88,7 +112,7 @@ LOCAL_PARSER.add_argument(
     metavar='signal-name',
     help='you should appoint a name. save retrieved signal to ~/.config/irkit-py/signal.json with name',
 )
-LOCAL_PARSER.add_argument('-s', '--send', metavar='signal-info', help='send a signal data or api response')
+LOCAL_PARSER.add_argument('-s', '--send', metavar='signal-info', help='send a signal. that excepted as json response or raw_data or key name of store')
 # TODO: verbose level hint: add_argument(action='count')
 LOCAL_PARSER.add_argument('-v', '--verbose', action='store_true', help='put verbose logs')
 LOCAL_PARSER.set_defaults(func=local_func)
