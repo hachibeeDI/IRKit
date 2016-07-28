@@ -34,15 +34,19 @@ def save_signal(name, signal):
         f.write(json.dumps(config))
 
 
-def get_signal(name):
+def get_signals():
     # type: (str) -> dict
     """
-    :exception: IOError, KeyError
+    :exception: IOError
     """
     from os import environ, path
 
     with open(path.join(environ['HOME'], '.config', 'irkit-py', 'signal.json'), 'r') as f:
-        return json.loads(f.read())[name]
+        return json.loads(f.read())
+
+
+def saved_signals():
+    return get_signals().keys()
 
 
 desc = """
@@ -62,6 +66,11 @@ def local_func(args):
         from irkit import logger, handler
         handler.setLevel(DEBUG)
         logger.setLevel(DEBUG)
+
+    if args.list:
+        for s in get_signals():
+            print(s)
+        return
 
     base_uri = resolve_irkit_addresses()[0]
     if args.host:
@@ -83,7 +92,7 @@ def local_func(args):
         except ValueError:
             # if argument is just string this command assume that is key name of data store
             try:
-                value_to_send = get_signal(args.send)
+                value_to_send = get_signals()[args.send]
             except (IOError, KeyError):
                 return print('invalid name "{}" is passed. string should be key of signal.json'.format(args.send))
 
@@ -119,6 +128,7 @@ LOCAL_PARSER.add_argument(
     metavar='signal-name',
     help='you should appoint a name. save retrieved signal to ~/.config/irkit-py/signal.json with name',
 )
+LOCAL_PARSER.add_argument('-l', '--list', action='store_true',  help='list of stored signals')
 LOCAL_PARSER.add_argument('-s', '--send', metavar='signal-info', help='send a signal. that excepted as json response or raw_data or key name of store')
 # TODO: verbose level hint: add_argument(action='count')
 LOCAL_PARSER.add_argument('-v', '--verbose', action='store_true', help='put verbose logs')
