@@ -9,44 +9,10 @@ from argparse import ArgumentParser
 from irkit.resolve import resolve_irkit_addresses
 from irkit._info import VERSION
 
-
-def save_signal(name, signal):
-    from os import environ, path, makedirs
-
-    config_root = path.join(environ['HOME'], '.config')
-    if not path.exists(config_root):
-        makedirs(config_root)
-    dir_to_save = path.join(config_root, 'irkit-py')
-    if not path.exists(dir_to_save):
-        makedirs(dir_to_save)
-
-    store_file = path.join(dir_to_save, 'signal.json')
-    # initialize if no store
-    if not path.exists(dir_to_save):
-        with open(store_file, 'w') as f:
-            f.write('{}')
-
-    with open(store_file, 'r+') as f:
-        config = json.loads(f.read())
-        config[name] = signal
-
-        f.seek(0)
-        f.write(json.dumps(config))
-
-
-def get_signals():
-    # type: (str) -> dict
-    """
-    :exception: IOError
-    """
-    from os import environ, path
-
-    with open(path.join(environ['HOME'], '.config', 'irkit-py', 'signal.json'), 'r') as f:
-        return json.loads(f.read())
-
-
-def saved_signals():
-    return get_signals().keys()
+from irkit._command_utils.storage import (
+    get_signals,
+    save_signal,
+)
 
 
 desc = """
