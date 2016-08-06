@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import (print_function, division, absolute_import, unicode_literals, )
 
-'''
-'''
 
-from logging import getLogger, StreamHandler, DEBUG
+from logging import getLogger
 logger = getLogger(__name__)
-
-import json
 
 from .base import Resources, InfraredLightEntity
 
@@ -32,14 +28,9 @@ class Messages(Resources):
     def get(self):
         # () -> InfraredLightEntity
         r = self.client.get(Messages.uri, {})
-        if r.status_code == 200:
-            result = r.text.decode('utf-8')
-            logger.debug('retrieve result is:' + result)
-            return InfraredLightEntity(
-                responsed_json=json.loads(result or '{}')
-            )
-        else:
-            raise ValueError(repr(r))
+        return InfraredLightEntity(
+            responsed_json=r
+        )
 
     def post(self, parameters):
         if isinstance(parameters, list):
