@@ -17,21 +17,22 @@ $ pip install irkit
 ## Command Usage
 
 ```
-usage: irkit [-h] {local,global} ...
+usage: irkit [-h] {local,internet} ...
 
 IRKit CLI Client for Python. v0.0.1 See also http://getirkit.com/#IRKit-
 Device-API
 
 positional arguments:
-  {local,global}  sub-command help
-    local         api for locals.
-    global        api for internets.
+  {local,internet}  sub-command help
+    local           api for locals.
+    internet        api for internets.
 
 optional arguments:
-  -h, --help      show this help message and exit
+  -h, --help        show this help message and exit
 
 ```
 
+Local API:
 
 ```
 usage: irkit local [-h] [--host] [-k] [-r] [--save signal-name] [-l]
@@ -50,6 +51,28 @@ optional arguments:
                         raw_data or key name of store
   -v, --verbose         put verbose logs
 ```
+
+Internet API:
+
+```
+usage: irkit internet [-h] [-r] [-s signal-info] [--save signal-name]
+                      [-c CLIENT_KEY] [-d DEVICE_ID] [-v]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -r, --retrieve        retrieve a signal
+  -s signal-info, --send signal-info
+                        send a signal. that excepted as json response or
+                        raw_data or key name of store
+  --save signal-name    you should appoint a name. save retrieved signal to
+                        ~/.config/irkit-py/signal.json with name
+  -c CLIENT_KEY, --client-key CLIENT_KEY
+                        client key
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        device id
+  -v, --verbose         put verbose logs
+```
+
 
 ### Example
 
@@ -75,6 +98,24 @@ $ cat ~/.config/irkit-py/signal.json
 
 $ irkit local --send movie-room-toggle
 ```
+
+
+#### Internet API
+
+Then you want to send internet API, you need to appoint device_id or client_key or both.
+
+```bash
+## retrieve needs client key
+$ irkit internet --retrieve --client-key YOUR_CLIENT_KEY
+
+## send needs client key and device id
+$ irkit internet --send '{"freq": 38, "data": [... ...], "format": "raw"}' \
+  -c 0A9B3FFB240444A2BA70A9835BFE4F89 \
+  --device-id 6B08F5EA443E4983864908B4AFF897AA
+```
+
+This tool haven't follow client-key and device-key smart integration (it can only get {*see --key option*}).
+It'll be implemented next version (and I welcome to your contlibute!).
 
 
 ## as Library
