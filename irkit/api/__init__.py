@@ -81,3 +81,10 @@ class API(BaseAPI):
 class LocalAPI(BaseAPI):
     messages = LocalMessages()
     keys = LocalKeys()
+
+
+class InternetAPI(BaseAPI):
+    messages = InternetMessages()
+
+    def __init__(self):
+        super(InternetAPI,  self).__init__('api.getirkit.com', True)
