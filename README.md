@@ -124,6 +124,11 @@ You can also use as api.
 Document is now writing... but `main.py` will help you to understand API interfaces.
 
 
+## Support Versions
+
+I'm sorry but it's only tested 2.7 so far. I'm planning to get it.
+
+
 ## Bug report or request or something
 
 GitHub issue is opend ;)
