@@ -49,8 +49,8 @@ application callbacks) are always unicode instances.
 """
 
 
-__author__   = 'Christopher Stawarz <cstawarz@csail.mit.edu>'
-__version__  = '1.1.1'
+__author__ = 'Christopher Stawarz <cstawarz@csail.mit.edu>'
+__version__ = '1.1.1'
 __revision__ = int('$Revision: 6125 $'.split()[1])
 
 
@@ -60,6 +60,14 @@ import re
 import socket
 import sys
 
+from six import (
+    string_types,
+    text_type,
+    binary_type,
+)
+from six.moves import (
+    range,
+)
 
 
 ################################################################################
@@ -257,28 +265,28 @@ class BonjourError(Exception):
     """
 
     _errmsg = {
-        kDNSServiceErr_NoSuchName:		'no such name',
-        kDNSServiceErr_NoMemory:		'no memory',
-        kDNSServiceErr_BadParam:		'bad param',
-        kDNSServiceErr_BadReference:		'bad reference',
-        kDNSServiceErr_BadState:		'bad state',
-        kDNSServiceErr_BadFlags:		'bad flags',
-        kDNSServiceErr_Unsupported:		'unsupported',
-        kDNSServiceErr_NotInitialized:		'not initialized',
-        kDNSServiceErr_AlreadyRegistered:	'already registered',
-        kDNSServiceErr_NameConflict:		'name conflict',
-        kDNSServiceErr_Invalid:			'invalid',
-        kDNSServiceErr_Firewall:		'firewall',
-        kDNSServiceErr_Incompatible:		'incompatible',
-        kDNSServiceErr_BadInterfaceIndex:	'bad interface index',
-        kDNSServiceErr_Refused:			'refused',
-        kDNSServiceErr_NoSuchRecord:		'no such record',
-        kDNSServiceErr_NoAuth:			'no auth',
-        kDNSServiceErr_NoSuchKey:		'no such key',
-        kDNSServiceErr_NATTraversal:		'NAT traversal',
-        kDNSServiceErr_DoubleNAT:		'double NAT',
-        kDNSServiceErr_BadTime:			'bad time',
-        }
+        kDNSServiceErr_NoSuchName:      'no such name',
+        kDNSServiceErr_NoMemory:        'no memory',
+        kDNSServiceErr_BadParam:        'bad param',
+        kDNSServiceErr_BadReference:        'bad reference',
+        kDNSServiceErr_BadState:        'bad state',
+        kDNSServiceErr_BadFlags:        'bad flags',
+        kDNSServiceErr_Unsupported:     'unsupported',
+        kDNSServiceErr_NotInitialized:      'not initialized',
+        kDNSServiceErr_AlreadyRegistered:   'already registered',
+        kDNSServiceErr_NameConflict:        'name conflict',
+        kDNSServiceErr_Invalid:         'invalid',
+        kDNSServiceErr_Firewall:        'firewall',
+        kDNSServiceErr_Incompatible:        'incompatible',
+        kDNSServiceErr_BadInterfaceIndex:   'bad interface index',
+        kDNSServiceErr_Refused:         'refused',
+        kDNSServiceErr_NoSuchRecord:        'no such record',
+        kDNSServiceErr_NoAuth:          'no auth',
+        kDNSServiceErr_NoSuchKey:       'no such key',
+        kDNSServiceErr_NATTraversal:        'NAT traversal',
+        kDNSServiceErr_DoubleNAT:       'double NAT',
+        kDNSServiceErr_BadTime:         'bad time',
+    }
 
     @classmethod
     def _errcheck(cls, result, func, args):
@@ -306,10 +314,10 @@ class _utf8_char_p(ctypes.c_char_p):
     @classmethod
     def from_param(cls, obj):
         if (obj is not None) and (not isinstance(obj, cls)):
-            if not isinstance(obj, basestring):
+            if not isinstance(obj, string_types):
                 raise TypeError('parameter must be a string type instance')
-            if not isinstance(obj, unicode):
-                obj = unicode(obj)
+            if not isinstance(obj, text_type):
+                obj = text_type(obj)
             obj = obj.encode('utf-8')
         return ctypes.c_char_p.from_param(obj)
 
@@ -359,7 +367,7 @@ class DNSRecordRef(ctypes.c_void_p):
         return obj
 
     def __eq__(self, other):
-        return ((type(other) is type(self)) and	(other.value == self.value))
+        return ((type(other) is type(self)) and (other.value == self.value))
 
     def __ne__(self, other):
         return not (other == self)
@@ -492,79 +500,79 @@ class DNSServiceRef(DNSRecordRef):
 
 _DNSServiceDomainEnumReply = _CFunc(
     None,
-    DNSServiceRef,		# sdRef
-    _DNSServiceFlags,		# flags
-    ctypes.c_uint32,		# interfaceIndex
-    _DNSServiceErrorType,	# errorCode
-    _utf8_char_p,		# replyDomain
-    ctypes.c_void_p,		# context
+    DNSServiceRef,      # sdRef
+    _DNSServiceFlags,       # flags
+    ctypes.c_uint32,        # interfaceIndex
+    _DNSServiceErrorType,   # errorCode
+    _utf8_char_p,       # replyDomain
+    ctypes.c_void_p,        # context
     )
 
 
 _DNSServiceRegisterReply = _CFunc(
     None,
-    DNSServiceRef,		# sdRef
-    _DNSServiceFlags,		# flags
-    _DNSServiceErrorType,	# errorCode
-    _utf8_char_p,		# name
-    _utf8_char_p,		# regtype
-    _utf8_char_p,		# domain
-    ctypes.c_void_p,		# context
+    DNSServiceRef,      # sdRef
+    _DNSServiceFlags,       # flags
+    _DNSServiceErrorType,   # errorCode
+    _utf8_char_p,       # name
+    _utf8_char_p,       # regtype
+    _utf8_char_p,       # domain
+    ctypes.c_void_p,        # context
     )
 
 
 _DNSServiceBrowseReply = _CFunc(
     None,
-    DNSServiceRef,		# sdRef
-    _DNSServiceFlags,		# flags
-    ctypes.c_uint32,		# interfaceIndex
-    _DNSServiceErrorType,	# errorCode
-    _utf8_char_p,		# serviceName
-    _utf8_char_p,		# regtype
-    _utf8_char_p,		# replyDomain
-    ctypes.c_void_p,		# context
+    DNSServiceRef,      # sdRef
+    _DNSServiceFlags,       # flags
+    ctypes.c_uint32,        # interfaceIndex
+    _DNSServiceErrorType,   # errorCode
+    _utf8_char_p,       # serviceName
+    _utf8_char_p,       # regtype
+    _utf8_char_p,       # replyDomain
+    ctypes.c_void_p,        # context
     )
 
 
 _DNSServiceResolveReply = _CFunc(
     None,
-    DNSServiceRef,		# sdRef
-    _DNSServiceFlags,		# flags
-    ctypes.c_uint32,		# interfaceIndex
-    _DNSServiceErrorType,	# errorCode
-    _utf8_char_p,		# fullname
-    _utf8_char_p,		# hosttarget
-    ctypes.c_uint16,		# port
-    ctypes.c_uint16,		# txtLen
-    ctypes.c_void_p,		# txtRecord (not null-terminated, so c_void_p)
-    ctypes.c_void_p,		# context
+    DNSServiceRef,      # sdRef
+    _DNSServiceFlags,       # flags
+    ctypes.c_uint32,        # interfaceIndex
+    _DNSServiceErrorType,   # errorCode
+    _utf8_char_p,       # fullname
+    _utf8_char_p,       # hosttarget
+    ctypes.c_uint16,        # port
+    ctypes.c_uint16,        # txtLen
+    ctypes.c_void_p,        # txtRecord (not null-terminated, so c_void_p)
+    ctypes.c_void_p,        # context
     )
 
 
 _DNSServiceRegisterRecordReply = _CFunc(
     None,
-    DNSServiceRef,		# sdRef
-    DNSRecordRef,		# RecordRef
-    _DNSServiceFlags,		# flags
-    _DNSServiceErrorType,	# errorCode
-    ctypes.c_void_p,		# context
+    DNSServiceRef,      # sdRef
+    DNSRecordRef,       # RecordRef
+    _DNSServiceFlags,       # flags
+    _DNSServiceErrorType,   # errorCode
+    ctypes.c_void_p,        # context
     )
 
 
 _DNSServiceQueryRecordReply = _CFunc(
     None,
-    DNSServiceRef,		# sdRef
-    _DNSServiceFlags,		# flags
-    ctypes.c_uint32,		# interfaceIndex
-    _DNSServiceErrorType,	# errorCode
-    _utf8_char_p,		# fullname
-    ctypes.c_uint16,		# rrtype
-    ctypes.c_uint16,		# rrclass
-    ctypes.c_uint16,		# rdlen
-    ctypes.c_void_p,		# rdata
-    ctypes.c_uint32,		# ttl
-    ctypes.c_void_p,		# context
-    )
+    DNSServiceRef,      # sdRef
+    _DNSServiceFlags,       # flags
+    ctypes.c_uint32,        # interfaceIndex
+    _DNSServiceErrorType,   # errorCode
+    _utf8_char_p,       # fullname
+    ctypes.c_uint16,        # rrtype
+    ctypes.c_uint16,        # rrclass
+    ctypes.c_uint16,        # rdlen
+    ctypes.c_void_p,        # rdata
+    ctypes.c_uint32,        # ttl
+    ctypes.c_void_p,        # context
+)
 
 
 
@@ -592,11 +600,11 @@ def _create_function_bindings():
         #    errcheck,
         #    outparam,
         #    (
-        #	param_1_type,
-        #	param_2_type,
-        #	...
-        #	param_n_type,
-        #	)),
+        #   param_1_type,
+        #   param_2_type,
+        #   ...
+        #   param_n_type,
+        #   )),
 
         'DNSServiceRefSockFD':
         (
@@ -604,7 +612,7 @@ def _create_function_bindings():
             NO_ERRCHECK,
             NO_OUTPARAM,
             (
-                DNSServiceRef,			# sdRef
+                DNSServiceRef,          # sdRef
                 )),
 
         'DNSServiceProcessResult':
@@ -613,7 +621,7 @@ def _create_function_bindings():
             ERRCHECK,
             NO_OUTPARAM,
             (
-                DNSServiceRef,			# sdRef
+                DNSServiceRef,          # sdRef
                 )),
 
         'DNSServiceRefDeallocate':
@@ -622,7 +630,7 @@ def _create_function_bindings():
             NO_ERRCHECK,
             NO_OUTPARAM,
             (
-                DNSServiceRef,			# sdRef
+                DNSServiceRef,          # sdRef
                 )),
 
         'DNSServiceEnumerateDomains':
@@ -631,11 +639,11 @@ def _create_function_bindings():
             ERRCHECK,
             OUTPARAM(0),
             (
-                ctypes.POINTER(DNSServiceRef),	# sdRef
-                _DNSServiceFlags,		# flags
-                ctypes.c_uint32,		# interfaceIndex
-                _DNSServiceDomainEnumReply,	# callBack
-                ctypes.c_void_p,		# context
+                ctypes.POINTER(DNSServiceRef),  # sdRef
+                _DNSServiceFlags,       # flags
+                ctypes.c_uint32,        # interfaceIndex
+                _DNSServiceDomainEnumReply, # callBack
+                ctypes.c_void_p,        # context
                 )),
 
         'DNSServiceRegister':
@@ -644,18 +652,18 @@ def _create_function_bindings():
             ERRCHECK,
             OUTPARAM(0),
             (
-                ctypes.POINTER(DNSServiceRef),	# sdRef
-                _DNSServiceFlags,		# flags
-                ctypes.c_uint32,		# interfaceIndex
-                _utf8_char_p,			# name
-                _utf8_char_p_non_null,		# regtype
-                _utf8_char_p,			# domain
-                _utf8_char_p,			# host
-                ctypes.c_uint16,		# port
-                ctypes.c_uint16,		# txtLen
-                ctypes.c_void_p,		# txtRecord
-                _DNSServiceRegisterReply,	# callBack
-                ctypes.c_void_p,		# context
+                ctypes.POINTER(DNSServiceRef),  # sdRef
+                _DNSServiceFlags,       # flags
+                ctypes.c_uint32,        # interfaceIndex
+                _utf8_char_p,           # name
+                _utf8_char_p_non_null,      # regtype
+                _utf8_char_p,           # domain
+                _utf8_char_p,           # host
+                ctypes.c_uint16,        # port
+                ctypes.c_uint16,        # txtLen
+                ctypes.c_void_p,        # txtRecord
+                _DNSServiceRegisterReply,   # callBack
+                ctypes.c_void_p,        # context
                 )),
 
         'DNSServiceAddRecord':
@@ -664,13 +672,13 @@ def _create_function_bindings():
             ERRCHECK,
             OUTPARAM(1),
             (
-                DNSServiceRef,			# sdRef
-                ctypes.POINTER(DNSRecordRef),	# RecordRef
-                _DNSServiceFlags,		# flags
-                ctypes.c_uint16,		# rrtype
-                ctypes.c_uint16,		# rdlen
-                ctypes.c_void_p,		# rdata
-                ctypes.c_uint32,		# ttl
+                DNSServiceRef,          # sdRef
+                ctypes.POINTER(DNSRecordRef),   # RecordRef
+                _DNSServiceFlags,       # flags
+                ctypes.c_uint16,        # rrtype
+                ctypes.c_uint16,        # rdlen
+                ctypes.c_void_p,        # rdata
+                ctypes.c_uint32,        # ttl
                 )),
 
         'DNSServiceUpdateRecord':
@@ -679,12 +687,12 @@ def _create_function_bindings():
             ERRCHECK,
             NO_OUTPARAM,
             (
-                DNSServiceRef,			# sdRef
-                _DNSRecordRef_or_null,		# RecordRef
-                _DNSServiceFlags,		# flags
-                ctypes.c_uint16,		# rdlen
-                ctypes.c_void_p,		# rdata
-                ctypes.c_uint32,		# ttl
+                DNSServiceRef,          # sdRef
+                _DNSRecordRef_or_null,      # RecordRef
+                _DNSServiceFlags,       # flags
+                ctypes.c_uint16,        # rdlen
+                ctypes.c_void_p,        # rdata
+                ctypes.c_uint32,        # ttl
                 )),
 
         'DNSServiceRemoveRecord':
@@ -693,9 +701,9 @@ def _create_function_bindings():
             ERRCHECK,
             NO_OUTPARAM,
             (
-                DNSServiceRef,			# sdRef
-                DNSRecordRef,			# RecordRef
-                _DNSServiceFlags,		# flags
+                DNSServiceRef,          # sdRef
+                DNSRecordRef,           # RecordRef
+                _DNSServiceFlags,       # flags
                 )),
 
         'DNSServiceBrowse':
@@ -704,13 +712,13 @@ def _create_function_bindings():
             ERRCHECK,
             OUTPARAM(0),
             (
-                ctypes.POINTER(DNSServiceRef),	# sdRef
-                _DNSServiceFlags,		# flags
-                ctypes.c_uint32,		# interfaceIndex
-                _utf8_char_p_non_null,		# regtype
-                _utf8_char_p,			# domain
-                _DNSServiceBrowseReply,		# callBack
-                ctypes.c_void_p,		# context
+                ctypes.POINTER(DNSServiceRef),  # sdRef
+                _DNSServiceFlags,       # flags
+                ctypes.c_uint32,        # interfaceIndex
+                _utf8_char_p_non_null,      # regtype
+                _utf8_char_p,           # domain
+                _DNSServiceBrowseReply,     # callBack
+                ctypes.c_void_p,        # context
                 )),
 
         'DNSServiceResolve':
@@ -719,14 +727,14 @@ def _create_function_bindings():
             ERRCHECK,
             OUTPARAM(0),
             (
-                ctypes.POINTER(DNSServiceRef),	# sdRef
-                _DNSServiceFlags,		# flags
-                ctypes.c_uint32,		# interfaceIndex
-                _utf8_char_p_non_null,		# name
-                _utf8_char_p_non_null,		# regtype
-                _utf8_char_p_non_null,		# domain
-                _DNSServiceResolveReply,	# callBack
-                ctypes.c_void_p,		# context
+                ctypes.POINTER(DNSServiceRef),  # sdRef
+                _DNSServiceFlags,       # flags
+                ctypes.c_uint32,        # interfaceIndex
+                _utf8_char_p_non_null,      # name
+                _utf8_char_p_non_null,      # regtype
+                _utf8_char_p_non_null,      # domain
+                _DNSServiceResolveReply,    # callBack
+                ctypes.c_void_p,        # context
                 )),
 
         'DNSServiceCreateConnection':
@@ -735,7 +743,7 @@ def _create_function_bindings():
             ERRCHECK,
             OUTPARAM(0),
             (
-                ctypes.POINTER(DNSServiceRef),	# sdRef
+                ctypes.POINTER(DNSServiceRef),  # sdRef
                 )),
 
         'DNSServiceRegisterRecord':
@@ -744,18 +752,18 @@ def _create_function_bindings():
             ERRCHECK,
             OUTPARAM(1),
             (
-                DNSServiceRef,			# sdRef
-                ctypes.POINTER(DNSRecordRef),	# RecordRef
-                _DNSServiceFlags,		# flags
-                ctypes.c_uint32,		# interfaceIndex
-                _utf8_char_p_non_null,		# fullname
-                ctypes.c_uint16,		# rrtype
-                ctypes.c_uint16,		# rrclass
-                ctypes.c_uint16,		# rdlen
-                ctypes.c_void_p,		# rdata
-                ctypes.c_uint32,		# ttl
-                _DNSServiceRegisterRecordReply,	# callBack
-                ctypes.c_void_p,		# context
+                DNSServiceRef,          # sdRef
+                ctypes.POINTER(DNSRecordRef),   # RecordRef
+                _DNSServiceFlags,       # flags
+                ctypes.c_uint32,        # interfaceIndex
+                _utf8_char_p_non_null,      # fullname
+                ctypes.c_uint16,        # rrtype
+                ctypes.c_uint16,        # rrclass
+                ctypes.c_uint16,        # rdlen
+                ctypes.c_void_p,        # rdata
+                ctypes.c_uint32,        # ttl
+                _DNSServiceRegisterRecordReply, # callBack
+                ctypes.c_void_p,        # context
                 )),
 
         'DNSServiceQueryRecord':
@@ -764,47 +772,47 @@ def _create_function_bindings():
             ERRCHECK,
             OUTPARAM(0),
             (
-                ctypes.POINTER(DNSServiceRef),	# sdRef
-                _DNSServiceFlags,		# flags
-                ctypes.c_uint32,		# interfaceIndex
-                _utf8_char_p_non_null,		# fullname
-                ctypes.c_uint16,		# rrtype
-                ctypes.c_uint16,		# rrclass
-                _DNSServiceQueryRecordReply,	# callBack
-                ctypes.c_void_p,		# context
+                ctypes.POINTER(DNSServiceRef),  # sdRef
+                _DNSServiceFlags,       # flags
+                ctypes.c_uint32,        # interfaceIndex
+                _utf8_char_p_non_null,      # fullname
+                ctypes.c_uint16,        # rrtype
+                ctypes.c_uint16,        # rrclass
+                _DNSServiceQueryRecordReply,    # callBack
+                ctypes.c_void_p,        # context
                 )),
 
         'DNSServiceReconfirmRecord':
         (
-            None,		# _DNSServiceErrorType in more recent versions
+            None,       # _DNSServiceErrorType in more recent versions
             NO_ERRCHECK,
             NO_OUTPARAM,
             (
-                _DNSServiceFlags,		# flags
-                ctypes.c_uint32,		# interfaceIndex
-                _utf8_char_p_non_null,		# fullname
-                ctypes.c_uint16,		# rrtype
-                ctypes.c_uint16,		# rrclass
-                ctypes.c_uint16,		# rdlen
-                ctypes.c_void_p,		# rdata
+                _DNSServiceFlags,       # flags
+                ctypes.c_uint32,        # interfaceIndex
+                _utf8_char_p_non_null,      # fullname
+                ctypes.c_uint16,        # rrtype
+                ctypes.c_uint16,        # rrclass
+                ctypes.c_uint16,        # rdlen
+                ctypes.c_void_p,        # rdata
                 )),
 
-        'DNSServiceConstructFullName':
-        (
+        'DNSServiceConstructFullName': (
             ctypes.c_int,
             ERRCHECK,
             OUTPARAM(0),
             (
-                ctypes.c_char * kDNSServiceMaxDomainName,	# fullName
-                _utf8_char_p,					# service
-                _utf8_char_p_non_null,				# regtype
-                _utf8_char_p_non_null,				# domain
-                )),
+                ctypes.c_char * kDNSServiceMaxDomainName,   # fullName
+                _utf8_char_p,                   # service
+                _utf8_char_p_non_null,              # regtype
+                _utf8_char_p_non_null,              # domain
+            )
+        ),
 
-        }
+    }
 
 
-    for name, (restype, errcheck, outparam, argtypes) in specs.iteritems():
+    for name, (restype, errcheck, outparam, argtypes) in specs.items():
         prototype = _CFunc(restype, *argtypes)
 
         paramflags = [1] * len(argtypes)
@@ -855,7 +863,7 @@ def _string_to_length_and_void_p(string):
 
 def _length_and_void_p_to_string(length, void_p):
     char_p = ctypes.cast(void_p, ctypes.POINTER(ctypes.c_char))
-    return ''.join(char_p[i] for i in xrange(length))
+    return ''.join(char_p[i] for i in range(length))
 
 
 
@@ -928,7 +936,7 @@ def DNSServiceEnumerateDomains(
       callBack:
         The function to be called when a domain is found or the call
         asynchronously fails.  Its signature should be
-        callBack(sdRef,	flags, interfaceIndex, errorCode, replyDomain).
+        callBack(sdRef, flags, interfaceIndex, errorCode, replyDomain).
 
       return value:
         A DNSServiceRef instance.
@@ -1401,12 +1409,14 @@ def DNSServiceBrowse(
 
     _global_lock.acquire()
     try:
-        sdRef = _DNSServiceBrowse(flags,
-                                  interfaceIndex,
-                                  regtype,
-                                  domain,
-                                  _callback,
-                                  None)
+        sdRef = _DNSServiceBrowse(
+            flags,
+            interfaceIndex,
+            regtype,
+            domain,
+            _callback,
+            None
+        )
     finally:
         _global_lock.release()
 
@@ -1942,7 +1952,7 @@ class TXTRecord(object):
         self._names = []
         self._items = {}
 
-        for name, value in items.iteritems():
+        for name, value in items.items():
             self[name] = value
 
     def __contains__(self, name):
@@ -2018,10 +2028,10 @@ class TXTRecord(object):
         length = len(name)
 
         if value is not None:
-            if isinstance(value, unicode):
+            if isinstance(value, text_type):
                 value = value.encode('utf-8')
             else:
-                value = str(value)
+                value = binary_type(value)
             length += 1 + len(value)
 
         if self.strict and (length > 255):
@@ -2059,7 +2069,7 @@ class TXTRecord(object):
 
         while data:
             length = ord(data[0])
-            item = data[1:length+1].split('=', 1)
+            item = data[1:length + 1].split('=', 1)
 
             # Add the item only if the name is non-empty and there are
             # no existing items with the same name
