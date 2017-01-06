@@ -126,7 +126,9 @@ Document is now writing... but `main.py` will help you to understand API interfa
 
 ## Support Versions
 
-I'm sorry but it's only tested 2.7 so far. I'm planning to get it.
+- 2.7
+
+- 3.6 (might unstable)
 
 
 ## Bug report or request or something
