@@ -1969,6 +1969,9 @@ class TXTRecord(object):
         return len(self._names)
 
     def __nonzero__(self):
+        return self.__bool__()
+
+    def __bool__(self):
         'Return False if the record is empty, True otherwise'
         return bool(self._items)
 
